@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+#nprogress .bar {
+  background: #3498db !important; /* Change to your preferred color */
+  height: 3px !important;
+}
