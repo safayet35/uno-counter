@@ -53,6 +53,7 @@ const Login = () => {
       }, 1000);
     } catch (err) {
       if (err.response) {
+         console.log(err.response)
         setError(err.response.data.message || "Something went wrong");
       } else if (err.request) {
         setError("No response from server");

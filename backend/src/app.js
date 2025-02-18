@@ -7,12 +7,6 @@ import path from "path";
 const app = express();
 const _dirname = path.resolve();
 
-app.use(express.static(path.join(_dirname, "/frontend/dist")));
-
-app.get("*", (_, res) => {
-  res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"));
-});
-
 app.use(express.json());
 app.use(cookieParser());
 
@@ -32,7 +26,13 @@ app.use(
 import userRouter from "./routes/user.router.js";
 import matchRouter from "./routes/match.router.js";
 app.use("/api/v1/user", userRouter);
-app.use("/api/v1/", matchRouter);
+app.use("/api/v1", matchRouter);
+
+app.use(express.static(path.join(_dirname, "/frontend/dist")));
+
+app.get("*", (_, res) => {
+  res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"));
+});
 
 app.use(errorMiddleware);
 export default app;

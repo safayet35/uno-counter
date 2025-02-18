@@ -8,18 +8,20 @@ const Matches = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   // Fetch player data from API
+
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
         const response = await axiosInstance.get("/get-roundes"); // Replace with actual API URL
 
         const data = response.data.data.roundes;
-
+        
         setData(data);
 
         setLoading(false);
-      } catch (error) {
-        console.error("Error fetching players:", error);
+      } catch (err) {
+        console.error("Error fetching players:", err);
+
         setLoading(false);
       }
     };
@@ -49,6 +51,7 @@ const Matches = () => {
 
   return (
     <div className="py-20 h-screen w-full">
+      
       {data.length >= 1 ? (
         reversedData.map((roundes, index) => (
           <MatchTable
