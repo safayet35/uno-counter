@@ -106,7 +106,7 @@ const MatchTable = ({ matches, date, index }) => {
                       onChange={e =>
                         handleUpdateScore(player.id, matchIndex, e.target.value)
                       }
-                      className="w-7 border p-1 text-center"
+                      className="w-9 text-[9px] border p-1 text-center"
                     />
                   </td>
                 ))}
