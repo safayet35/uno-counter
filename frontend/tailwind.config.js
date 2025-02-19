@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 import daisyui from "daisyui";
+import tailwindMotion from "tailwindcss-motion";
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
@@ -38,9 +39,9 @@ export default {
       "winter",
       "dim",
       "nord",
-      "sunset",
-    ],
+      "sunset"
+    ]
   },
 
-  plugins: [daisyui]
+  plugins: [daisyui,tailwindMotion]
 };

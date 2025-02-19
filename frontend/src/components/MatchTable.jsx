@@ -56,7 +56,7 @@ const MatchTable = ({ matches, date, index }) => {
     if (index === sortedPlayers.length - 1) return "bg-red-300"; // Last Place
     return "bg-white"; // Middle Players
   };
-
+  
   const options = {
     timeZone: "Asia/Dhaka",
     day: "2-digit",
@@ -94,7 +94,7 @@ const MatchTable = ({ matches, date, index }) => {
             {sortedPlayers.map((player, index) => (
               <tr key={index} className={`text-center ${getRowColor(index)}`}>
                 <td className="p-2 border font-bold">{index + 1}</td>
-                <td className="p-2 text-[12px] border">
+                <td className={`p-2 text-[12px] border `}>
                   {player.name} {getEmoji(index)}
                 </td>
                 {player.scores.map((score, matchIndex) => (
