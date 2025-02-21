@@ -5,12 +5,21 @@ import { useAuth } from "../context/AuthContext.jsx";
 const ScoreTable = () => {
   const [players, setPlayers] = useState([]);
   const [newPlayerName, setNewPlayerName] = useState("");
-  const [showSubmit, setShowSubmit] = useState(false);
+  const [showSave, setShowSave] = useState(true);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [showSubmit, setShowSubmit] = useState(false);
   const { setTokenInLs, isAuthenticated } = useAuth();
+  const [localPlayersInfo, setLocalPlayersInfo] = useState(
+    () => JSON.parse(localStorage.getItem("localInfo")) || []
+  );
+  const [localArray, setLocalArray] = useState(() => localPlayersInfo || []);
 
+  // useEffect(() => {
+  //     const data = localStorage.getItem("localInfo");
+  //     setLocalPlayersInfo(JSON.parse(data));
+  //   }, []);
   useEffect(() => {
     if (message) {
       toast.success(message);
@@ -22,7 +31,7 @@ const ScoreTable = () => {
       toast.error(error);
     }
   }, [error]);
-
+  const isLocalInfoHas = localPlayersInfo.length > 0;
   // Add a new player
   const handleAddPlayer = () => {
     if (newPlayerName.trim() === "") return;
@@ -35,26 +44,41 @@ const ScoreTable = () => {
         total: Number(0)
       }
     ]);
-    setShowSubmit(true);
+
     setNewPlayerName("");
   };
 
   // Update match score
   const handleUpdateScore = (playerId, matchIndex, value) => {
-    setPlayers(prev =>
-      prev.map(player => {
-        if (player.id === playerId) {
-          const updatedMatches = [...player.scores];
-          updatedMatches[matchIndex] = value === "" ? 0 : Number(value);
-          return {
-            ...player,
-            scores: updatedMatches,
-            total: updatedMatches.reduce((acc, curr) => acc + curr, 0)
-          };
-        }
-        return player;
-      })
-    );
+    isLocalInfoHas
+      ? setLocalArray(prev =>
+          prev.map(player => {
+            if (player.id === playerId) {
+              const updatedMatches = [...player.scores];
+              updatedMatches[matchIndex] = value === "" ? 0 : Number(value);
+              return {
+                ...player,
+                scores: updatedMatches,
+                total: updatedMatches.reduce((acc, curr) => acc + curr, 0)
+              };
+            }
+            return player;
+          })
+        )
+      : setPlayers(prev =>
+          prev.map(player => {
+            if (player.id === playerId) {
+              const updatedMatches = [...player.scores];
+              updatedMatches[matchIndex] = value === "" ? 0 : Number(value);
+              return {
+                ...player,
+                scores: updatedMatches,
+                total: updatedMatches.reduce((acc, curr) => acc + curr, 0)
+              };
+            }
+            return player;
+          })
+        );
   };
 
   const handleSubmit = async e => {
@@ -64,12 +88,15 @@ const ScoreTable = () => {
     try {
       const { data } = await axiosInstance.post(
         "/create-round",
-        { players },
+        { players: localPlayersInfo },
         {
           withCredentials: true
         }
       );
+
       setMessage(data.message);
+
+      localStorage.removeItem("localInfo");
     } catch (err) {
       console.log(err);
       setLoading(false);
@@ -84,6 +111,21 @@ const ScoreTable = () => {
     setPlayers([]);
   };
 
+  useEffect(() => {
+    setShowSubmit(checkLastInput());
+  }, [showSubmit]);
+
+  const checkLastInput = () => {
+    return localPlayersInfo.some(val => {
+      return val.scores[5] > 0;
+    });
+  };
+
+  const handleLocalStorage = () => {
+    const data = isLocalInfoHas ? [...localArray] : players;
+    localStorage.setItem("localInfo", JSON.stringify(data));
+  };
+  
   return (
     <div className="container mx-auto p-4 text-[10px]">
       <ToastContainer />
@@ -121,34 +163,73 @@ const ScoreTable = () => {
             </tr>
           </thead>
           <tbody className="">
-            {players.map(player => (
-              <tr key={player.id} className="text-center">
-                <td className="p-1 border">{player.name}</td>
-                {player.scores.map((score, matchIndex) => (
-                  <td key={matchIndex} className="p-1 border">
-                    <input
-                      type="number"
-                      value={score === 0 ? "" : score}
-                      onChange={e =>
-                        handleUpdateScore(player.id, matchIndex, e.target.value)
-                      }
-                      className="outline-1 outline-green-500 w-7 border p-1"
-                    />
-                  </td>
+            {isLocalInfoHas
+              ? localArray.map(player => (
+                  <tr key={player.id} className="text-center">
+                    <td className="p-1 border">{player.name}</td>
+                    {player.scores.map((score, matchIndex) => (
+                      <td key={matchIndex} className="p-1 border">
+                        <input
+                          type="number"
+                          value={score === 0 ? "" : score}
+                          onChange={e =>
+                            handleUpdateScore(
+                              player.id,
+                              matchIndex,
+                              e.target.value
+                            )
+                          }
+                          className="outline-1 outline-green-500 w-7 border p-1"
+                        />
+                      </td>
+                    ))}
+                    <td className="p-2 border font-bold">{player.total}</td>
+                  </tr>
+                ))
+              : players.map(player => (
+                  <tr key={player.id} className="text-center">
+                    <td className="p-1 border">{player.name}</td>
+                    {player.scores.map((score, matchIndex) => (
+                      <td key={matchIndex} className="p-1 border">
+                        <input
+                          type="number"
+                          value={score === 0 ? "" : score}
+                          onChange={e =>
+                            handleUpdateScore(
+                              player.id,
+                              matchIndex,
+                              e.target.value
+                            )
+                          }
+                          className="outline-1 outline-green-500 w-7 border p-1"
+                        />
+                      </td>
+                    ))}
+                    <td className="p-2 border font-bold">{player.total}</td>
+                  </tr>
                 ))}
-                <td className="p-2 border font-bold">{player.total}</td>
-              </tr>
-            ))}
           </tbody>
         </table>
-        {showSubmit ? (
-          <button
-            className="my-4 bg-green-500 text-white px-4 py-2 rounded"
-            type="submit"
-          >
-            Submit
-          </button>
-        ) : null}
+        {
+          <div className="flex gap-4">
+            {showSubmit ? (
+              <button
+                className="my-4 bg-green-500 text-white px-4 py-2 rounded"
+                type="submit"
+              >
+                Submit
+              </button>
+            ) : null}
+            {showSave ? (
+              <div
+                onClick={handleLocalStorage}
+                className="my-4 bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                Save
+              </div>
+            ) : null}
+          </div>
+        }
       </form>
     </div>
   );
