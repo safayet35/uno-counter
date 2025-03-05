@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import duckSound from "../../public/audio/duck-toy-sound.mp3";
+
 import { ToastContainer, toast } from "react-toastify";
 import axiosInstance from "../api/axiosInstance.js";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -121,7 +121,7 @@ const ScoreTable = () => {
       return val.scores[5] > 0;
     });
   };
-  const audioRef = useRef(new Audio("../../public/audio/duck-toy-sound.mp3"));
+  const audioRef = useRef(new Audio("/audio/duck-toy-sound.mp3"));
 
   const audio = audioRef.current;
   const handleLocalStorage = e => {
