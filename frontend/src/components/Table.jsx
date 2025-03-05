@@ -125,9 +125,9 @@ const ScoreTable = () => {
     const data = isLocalInfoHas ? [...localArray] : players;
     localStorage.setItem("localInfo", JSON.stringify(data));
   };
-  
+
   return (
-    <div className="container mx-auto p-4 text-[10px]">
+    <div className="container mx-auto px-4 py-10 text-[10px]">
       <ToastContainer />
       <h2 className="text-lg font-bold mb-4">Match Score Table</h2>
 
@@ -221,12 +221,13 @@ const ScoreTable = () => {
               </button>
             ) : null}
             {showSave ? (
-              <div
+              <button
+                type="button"
                 onClick={handleLocalStorage}
                 className="my-4 bg-blue-500 text-white px-4 py-2 rounded"
               >
                 Save
-              </div>
+              </button>
             ) : null}
           </div>
         }

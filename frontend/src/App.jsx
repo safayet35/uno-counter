@@ -31,7 +31,19 @@ const App = () => {
               <Matches />
             </ProtectedPage>
           )
-        }
+        },
+        
+            {
+      path: "/table",
+      element: (
+        <ProtectedPage>
+          <Table />
+        </ProtectedPage>
+      )
+    },
+        
+        
+        
       ]
     },
     {
@@ -42,14 +54,7 @@ const App = () => {
       path: "/signup",
       element: <Signup />
     },
-    {
-      path: "/table",
-      element: (
-        <ProtectedPage>
-          <Table />
-        </ProtectedPage>
-      )
-    },
+
     {
       path: "/logout",
       element: <Logout />
