@@ -12,3 +12,11 @@ body {
   background: #3498db !important; /* Change to your preferred color */
   height: 3px !important;
 }
+.scale-button {
+  transition: transform 0.1s ease;
+}
+
+.scale-button:active {
+  transform: scale(1.2);
+  background-color: #0057b2;
+}

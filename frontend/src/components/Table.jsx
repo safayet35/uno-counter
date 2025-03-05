@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import duckSound from "../../public/audio/duck-toy-sound.mp3";
 import { ToastContainer, toast } from "react-toastify";
 import axiosInstance from "../api/axiosInstance.js";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -120,10 +121,14 @@ const ScoreTable = () => {
       return val.scores[5] > 0;
     });
   };
+  const audioRef = useRef(new Audio("../../public/audio/duck-toy-sound.mp3"));
 
-  const handleLocalStorage = () => {
+  const audio = audioRef.current;
+  const handleLocalStorage = e => {
     const data = isLocalInfoHas ? [...localArray] : players;
     localStorage.setItem("localInfo", JSON.stringify(data));
+    audio.currentTime = 0;
+    audio.play();
   };
 
   return (
@@ -150,7 +155,7 @@ const ScoreTable = () => {
 
       {/* Table */}
       <form onSubmit={handleSubmit} className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-300">
+        <table className="table min-w-full bg-white border border-gray-300">
           <thead>
             <tr className="bg-gray-200">
               <th className="p-2 border">Name</th>
@@ -223,8 +228,8 @@ const ScoreTable = () => {
             {showSave ? (
               <button
                 type="button"
-                onClick={handleLocalStorage}
-                className="my-4 bg-blue-500 text-white px-4 py-2 rounded"
+                onClick={e => handleLocalStorage(e)}
+                className="scale-button transition-all my-4 mx-1 bg-blue-500 text-white px-4 py-2 rounded "
               >
                 Save
               </button>
