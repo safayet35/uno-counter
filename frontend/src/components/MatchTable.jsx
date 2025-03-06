@@ -110,7 +110,7 @@ const MatchTable = ({ matches, date, index }) => {
                     />
                   </td>
                 ))}
-                <td className="p-2 border font-bold">{player.total}</td>
+                <td className="text-red-600 text-[14px] p-2 border font-bold">{player.total}</td>
               </tr>
             ))}
           </tbody>

@@ -17,10 +17,6 @@ const ScoreTable = () => {
   );
   const [localArray, setLocalArray] = useState(() => localPlayersInfo || []);
 
-  // useEffect(() => {
-  //     const data = localStorage.getItem("localInfo");
-  //     setLocalPlayersInfo(JSON.parse(data));
-  //   }, []);
   useEffect(() => {
     if (message) {
       toast.success(message);
@@ -34,6 +30,11 @@ const ScoreTable = () => {
   }, [error]);
   const isLocalInfoHas = localPlayersInfo.length > 0;
   // Add a new player
+
+  const submitAudioRef = useRef(new Audio("/audio/submit-sound.mp3"));
+
+  const submitAudio = submitAudioRef.current;
+
   const handleAddPlayer = () => {
     if (newPlayerName.trim() === "") return;
     setPlayers([
@@ -94,9 +95,10 @@ const ScoreTable = () => {
           withCredentials: true
         }
       );
+      submitAudio.currentTime = 0;
 
       setMessage(data.message);
-
+      submitAudio.play();
       localStorage.removeItem("localInfo");
     } catch (err) {
       console.log(err);
@@ -121,18 +123,19 @@ const ScoreTable = () => {
       return val.scores[5] > 0;
     });
   };
-  const audioRef = useRef(new Audio("/audio/duck-toy-sound.mp3"));
+  const saveAudioRef = useRef(new Audio("/audio/duck-toy-sound.mp3"));
 
-  const audio = audioRef.current;
+  const saveAudio = saveAudioRef.current;
   const handleLocalStorage = e => {
     const data = isLocalInfoHas ? [...localArray] : players;
     localStorage.setItem("localInfo", JSON.stringify(data));
-    audio.currentTime = 0;
-    audio.play();
+
+    saveAudio.currentTime = 0;
+    saveAudio.play();
   };
 
   return (
-    <div className="container mx-auto px-4 py-10 text-[10px]">
+    <div className=" container mx-auto px-4 py-10 text-[10px]">
       <ToastContainer />
       <h2 className="text-lg font-bold mb-4">Match Score Table</h2>
 
@@ -184,11 +187,13 @@ const ScoreTable = () => {
                               e.target.value
                             )
                           }
-                          className="outline-1 outline-green-500 w-7 border p-1"
+                          className="text-[9px] outline-1 outline-green-500 w-7 border p-1"
                         />
                       </td>
                     ))}
-                    <td className="p-2 border font-bold">{player.total}</td>
+                    <td className="text-red-600 text-[14px] p-2 border font-bold">
+                      {player.total}
+                    </td>
                   </tr>
                 ))
               : players.map(player => (
@@ -206,11 +211,13 @@ const ScoreTable = () => {
                               e.target.value
                             )
                           }
-                          className="outline-1 outline-green-500 w-7 border p-1"
+                          className="outline-1 outline-green-500 text-[9px] w-7 border p-1"
                         />
                       </td>
                     ))}
-                    <td className="p-2 border font-bold">{player.total}</td>
+                    <td className="text-red-600 text-[14px] p-2 border font-bold">
+                      {player.total}
+                    </td>
                   </tr>
                 ))}
           </tbody>
@@ -219,7 +226,7 @@ const ScoreTable = () => {
           <div className="flex gap-4">
             {showSubmit ? (
               <button
-                className="my-4 bg-green-500 text-white px-4 py-2 rounded"
+                className="scale-submit-button transition-all my-4 bg-green-500 text-white px-4 py-2 rounded"
                 type="submit"
               >
                 Submit
