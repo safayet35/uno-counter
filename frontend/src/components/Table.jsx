@@ -31,10 +31,10 @@ const ScoreTable = () => {
   const isLocalInfoHas = localPlayersInfo.length > 0;
   // Add a new player
 
-  const submitAudioRef = useRef(new Audio("/audio/submit-sound.mp3"));
+  const submitAudioRef = useRef(new Audio("/audio/chalti-firti-cocaine.mp3"));
 
   const submitAudio = submitAudioRef.current;
-
+  
   const handleAddPlayer = () => {
     if (newPlayerName.trim() === "") return;
     setPlayers([
