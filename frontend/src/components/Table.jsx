@@ -34,7 +34,7 @@ const ScoreTable = () => {
   const submitAudioRef = useRef(new Audio("/audio/chalti-firti-cocaine.mp3"));
 
   const submitAudio = submitAudioRef.current;
-  
+
   const handleAddPlayer = () => {
     if (newPlayerName.trim() === "") return;
     setPlayers([
@@ -123,9 +123,10 @@ const ScoreTable = () => {
       return val.scores[5] > 0;
     });
   };
-  const saveAudioRef = useRef(new Audio("/audio/duck-toy-sound.mp3"));
+  const saveAudioRef = useRef(new Audio("/audio/among-us.mp3"));
 
   const saveAudio = saveAudioRef.current;
+
   const handleLocalStorage = e => {
     const data = isLocalInfoHas ? [...localArray] : players;
     localStorage.setItem("localInfo", JSON.stringify(data));
